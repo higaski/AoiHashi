@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "freertos/queue.h"
-#include "freertos/ringbuf.h"
+#include <freertos/queue.h>
+#include <freertos/ringbuf.h>
 
 /// BT queue
 extern QueueHandle_t bt_queue;

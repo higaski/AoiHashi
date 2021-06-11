@@ -4,19 +4,19 @@
 /// \author Vincent Hamp
 /// \date   20/10/2018
 
-#include "driver/uart.h"
+#include <driver/uart.h>
+#include <esp_log.h>
+#include <esp_spi_flash.h>
+#include <esp_system.h>
+#include <esp_task_wdt.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <soc/uart_struct.h>
 #include <array>
 #include <cstdint>
 #include <memory>
 #include "config.hpp"
-#include "esp_log.h"
-#include "esp_spi_flash.h"
-#include "esp_system.h"
-#include "esp_task_wdt.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "queue.hpp"
-#include "soc/uart_struct.h"
 
 QueueHandle_t uart_queue{nullptr};
 static RingbufHandle_t uart_buf{nullptr};
