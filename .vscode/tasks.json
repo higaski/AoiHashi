@@ -6,9 +6,9 @@
       "type": "shell",
       "isBackground": true,
       "options": {
-        "cwd": "/opt/esp/openocd-esp32"
+        "cwd": "/home/vinci/.espressif/tools/openocd-esp32/v0.10.0-esp32-20210401/openocd-esp32"
       },
-      "command": "bin/openocd -s share/openocd/scripts -f interface/jlink.cfg -f board/esp-wroom-32.cfg"
+      "command": "bin/openocd -c \"adapter_khz 1000\" -s share/openocd/scripts -f interface/jlink.cfg -f board/esp-wroom-32.cfg"
     }
   ]
 }
