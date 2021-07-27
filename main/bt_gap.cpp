@@ -4,20 +4,20 @@
 /// \author Vincent Hamp
 /// \date   20/10/2018
 
+#include <esp_bt.h>
+#include <esp_bt_device.h>
+#include <esp_bt_main.h>
+#include <esp_gap_bt_api.h>
+#include <esp_log.h>
+#include <esp_spp_api.h>
+#include <esp_system.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 #include <algorithm>
+#include <bt_spp.hpp>
 #include <cstdint>
 #include <cstring>
-#include "bt_spp.hpp"
 #include "config.hpp"
-#include "esp_bt.h"
-#include "esp_bt_device.h"
-#include "esp_bt_main.h"
-#include "esp_gap_bt_api.h"
-#include "esp_log.h"
-#include "esp_spp_api.h"
-#include "esp_system.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 
 /// Own BT device address
 esp_bd_addr_t own_bda{};
@@ -43,8 +43,10 @@ static uint32_t random_interval(uint32_t min, uint32_t max) {
 /// \return true  BT device address valid
 /// \return false BT device address invalid
 static bool is_valid_bda(esp_bd_addr_t const& bda) {
-  return std::any_of(
-      std::begin(bda), std::end(bda), [](uint8_t v) { return v != 0; });
+  for (auto i{0u}; i < ESP_BD_ADDR_LEN; ++i)
+    if (bda[i] != 0)
+      return true;
+  return false;
 }
 
 /// Convert BT device address to string
@@ -271,6 +273,9 @@ static void bt_app_gap_cb(esp_bt_gap_cb_event_t event,
     //
     case ESP_BT_GAP_EVT_MAX:
       break;
+
+    default:
+      break;
   }
 }
 
@@ -300,7 +305,7 @@ void bt_gap_init() {
   ESP_LOGI(bt_gap_tag, "Own address: %s", bda2str(own_bda, bda_str, 18));
 
   // Set discoverable and connectable mode, wait to be connected
-  esp_bt_gap_set_scan_mode(ESP_BT_SCAN_MODE_CONNECTABLE_DISCOVERABLE);
+  esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE);
 
   // Register GAP callback function
   esp_bt_gap_register_callback(bt_app_gap_cb);

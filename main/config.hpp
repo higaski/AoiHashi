@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include "driver/uart.h"
+#include <driver/gpio.h>
+#include <driver/uart.h>
 
 /// BT device name
 constexpr auto bt_dev_name{"ESP32_BT_UART_BRIDGE"};

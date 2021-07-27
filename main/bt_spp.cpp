@@ -4,21 +4,21 @@
 /// \author Vincent Hamp
 /// \date   20/10/2018
 
+#include <esp_bt.h>
+#include <esp_bt_device.h>
+#include <esp_bt_main.h>
+#include <esp_gap_bt_api.h>
+#include <esp_log.h>
+#include <esp_spp_api.h>
+#include <esp_system.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/ringbuf.h>
+#include <freertos/task.h>
+#include <bt.hpp>
+#include <bt_gap.hpp>
 #include <cstdint>
 #include <cstring>
-#include "bt.hpp"
-#include "bt_gap.hpp"
 #include "config.hpp"
-#include "esp_bt.h"
-#include "esp_bt_device.h"
-#include "esp_bt_main.h"
-#include "esp_gap_bt_api.h"
-#include "esp_log.h"
-#include "esp_spp_api.h"
-#include "esp_system.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/ringbuf.h"
-#include "freertos/task.h"
 #include "queue.hpp"
 #include "uart.hpp"
 
@@ -133,6 +133,9 @@ static void bt_spp_master_cb(esp_spp_cb_event_t event,
     case ESP_SPP_SRV_OPEN_EVT:
       ESP_LOGI(bt_spp_master_tag, "ESP_SPP_SRV_OPEN_EVT");
       break;
+
+    default:
+      break;
   }
 }
 
@@ -200,6 +203,9 @@ static void bt_spp_slave_cb(esp_spp_cb_event_t event,
       ESP_LOGI(bt_spp_slave_tag, "ESP_SPP_SRV_OPEN_EVT");
       bt_task_start_up(param->srv_open.handle);
       uart_task_start_up();
+      break;
+
+    default:
       break;
   }
 }

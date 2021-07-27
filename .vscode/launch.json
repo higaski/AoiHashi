@@ -5,9 +5,9 @@
       "type": "gdb",
       "request": "launch",
       "name": "Debug",
-      "target": "./build/${workspaceFolderBasename}.elf",
+      "target": "/home/vinci/Develop/VSCode/AoiHashi/build/AoiHashi.elf",
       "cwd": "${workspaceFolder}",
-      "gdbpath": "/opt/esp/xtensa-esp32-elf/bin/xtensa-esp32-elf-gdb",
+      "gdbpath": "/home/vinci/.espressif/tools/xtensa-esp32-elf/esp-2020r3-8.4.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-gdb",
       "autorun": [
         "target remote :3333",
         "mon reset halt",

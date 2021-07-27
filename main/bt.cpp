@@ -4,26 +4,21 @@
 /// \author Vincent Hamp
 /// \date   20/10/2018
 
+#include <esp_bt.h>
+#include <esp_bt_device.h>
+#include <esp_bt_main.h>
+#include <esp_gap_bt_api.h>
+#include <esp_log.h>
+#include <esp_spp_api.h>
+#include <esp_system.h>
+#include <esp_task_wdt.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <bt_gap.hpp>
 #include <cstdint>
 #include <cstring>
-#include "bt_gap.hpp"
 #include "config.hpp"
-#include "esp_bt.h"
-#include "esp_bt_device.h"
-#include "esp_bt_main.h"
-#include "esp_gap_bt_api.h"
-#include "esp_log.h"
-#include "esp_spp_api.h"
-#include "esp_system.h"
-#include "esp_task_wdt.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "queue.hpp"
-
-// Need to include rfc_int.h for declaration of rfc_cb for dirty workaround
-extern "C" {
-#include "rfc_int.h"
-}
 
 /// BT transmit task
 ///
@@ -45,10 +40,6 @@ static void bt_tx_task(void* pvHandle) {
     while (!(
         data = (uint8_t*)xRingbufferReceive(uart_buf, &len, pdMS_TO_TICKS(10))))
       vTaskDelay(pdMS_TO_TICKS(10));
-
-    // Dirty workaround to keep SPP from starving from ugly flow control bug
-    for (auto i{0}; i < MAX_RFC_PORTS; ++i)
-      rfc_cb.port.port[i].credit_tx = 10;
 
     // Write data to SPP
     while (esp_spp_write(handle, len, data) != ESP_OK)

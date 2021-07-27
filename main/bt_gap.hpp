@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "esp_bt_device.h"
+#include <esp_bt_device.h>
 
 void bt_gap_init();
 

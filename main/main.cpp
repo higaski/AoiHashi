@@ -4,14 +4,14 @@
 /// \author Vincent Hamp
 /// \date   20/10/2018
 
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <nvs.h>
+#include <nvs_flash.h>
+#include <bt.hpp>
 #include <cstdint>
 #include <cstring>
-#include "bt.hpp"
 #include "config.hpp"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "nvs.h"
-#include "nvs_flash.h"
 #include "uart.hpp"
 
 /// Application called from ESP-IDF
