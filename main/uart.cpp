@@ -22,7 +22,7 @@ QueueHandle_t uart_queue{nullptr};
 static RingbufHandle_t uart_buf{nullptr};
 static uart_config_t uart_config{uart_config_default};
 static DRAM_ATTR uart_dev_t* const UART[UART_NUM_MAX] = {
-    &UART0, &UART1, &UART2};
+  &UART0, &UART1, &UART2};
 
 /// Baud rate detection
 ///
@@ -31,21 +31,19 @@ static DRAM_ATTR uart_dev_t* const UART[UART_NUM_MAX] = {
 /// \return Detected baud rate
 static int baud_rate_detection(uint32_t lowpulse, uint32_t highpulse) {
   constexpr int supported_baud_rates[]{
-      300,     600,     1200,    2400,    4800,    9600,    14400,
-      19200,   38400,   57600,   115200,  128000,  153600,  230400,
-      256000,  460800,  500000,  921600,  1000000, 1500000, 2000000,
-      2500000, 3000000, 3500000, 4000000, 4500000, 5000000};
+    300,     600,     1200,    2400,    4800,    9600,    14400,
+    19200,   38400,   57600,   115200,  128000,  153600,  230400,
+    256000,  460800,  500000,  921600,  1000000, 1500000, 2000000,
+    2500000, 3000000, 3500000, 4000000, 4500000, 5000000};
 
   uint32_t const pulse{(lowpulse + highpulse) / 2};
   uint32_t const baud_rate{80'000'000 / pulse};
 
   uint32_t i{};
   for (; i < sizeof(supported_baud_rates) / sizeof(int); ++i)
-    if (baud_rate <= supported_baud_rates[i])
-      break;
+    if (baud_rate <= supported_baud_rates[i]) break;
 
-  if (!i)
-    return supported_baud_rates[i];
+  if (!i) return supported_baud_rates[i];
   else {
     if (baud_rate - supported_baud_rates[i - 1] <
         supported_baud_rates[i] - baud_rate)
@@ -66,13 +64,12 @@ static void uart_rx_task([[maybe_unused]] void* pvParameter) {
 
     // Read data from UART
     auto len{
-        uart_read_bytes(uart_num, &rx[0], uart_chunk_size, pdMS_TO_TICKS(10))};
-    if (len <= 0)
-      continue;
+      uart_read_bytes(uart_num, &rx[0], uart_chunk_size, pdMS_TO_TICKS(10))};
+    if (len <= 0) continue;
 
     // Baud rate detection
     auto const baud_rate{baud_rate_detection(
-        UART[uart_num]->lowpulse.min_cnt, UART[uart_num]->highpulse.min_cnt)};
+      UART[uart_num]->lowpulse.min_cnt, UART[uart_num]->highpulse.min_cnt)};
     if (baud_rate != uart_config.baud_rate) {
       uart_config.baud_rate = baud_rate;
       uart_param_config(uart_num, &uart_config);
@@ -97,23 +94,20 @@ static void uart_tx_task([[maybe_unused]] void* pvParameter) {
 
     // Receive ring buffer handle from queue
     RingbufHandle_t uart_buf{nullptr};
-    if (!xQueueReceive(bt_queue, &uart_buf, portMAX_DELAY))
-      continue;
+    if (!xQueueReceive(bt_queue, &uart_buf, portMAX_DELAY)) continue;
 
     // Receive data from ring buffer
     uint8_t* data{nullptr};
     size_t len{};
-    while (!(
-        data = (uint8_t*)xRingbufferReceive(uart_buf, &len, pdMS_TO_TICKS(10))))
+    while (
+      !(data = (uint8_t*)xRingbufferReceive(uart_buf, &len, pdMS_TO_TICKS(10))))
       vTaskDelay(pdMS_TO_TICKS(10));
 
     // Write data to UART
     while (len) {
       int written_len{uart_write_bytes(uart_num, (const char*)data, len)};
-      if (written_len <= 0)
-        continue;
-      if ((len -= written_len))
-        vTaskDelay(pdMS_TO_TICKS(10));
+      if (written_len <= 0) continue;
+      if ((len -= written_len)) vTaskDelay(pdMS_TO_TICKS(10));
     }
 
     // Return item from ring buffer

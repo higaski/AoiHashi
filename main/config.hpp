@@ -71,11 +71,11 @@ constexpr auto uart_rts_pin{UART_PIN_NO_CHANGE};
 constexpr auto uart_cts_pin{UART_PIN_NO_CHANGE};
 
 /// UART configuration parameters
-constexpr uart_config_t uart_config_default{
-    .baud_rate = 921600,
-    .data_bits = UART_DATA_8_BITS,
-    .parity = UART_PARITY_DISABLE,
-    .stop_bits = UART_STOP_BITS_1,
-    .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
-    .rx_flow_ctrl_thresh = 0,
-    .use_ref_tick = false};
+constexpr uart_config_t uart_config_default{.baud_rate = 921600,
+                                            .data_bits = UART_DATA_8_BITS,
+                                            .parity = UART_PARITY_DISABLE,
+                                            .stop_bits = UART_STOP_BITS_1,
+                                            .flow_ctrl =
+                                              UART_HW_FLOWCTRL_DISABLE,
+                                            .rx_flow_ctrl_thresh = 0,
+                                            .use_ref_tick = false};

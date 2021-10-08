@@ -35,8 +35,7 @@ static RingbufHandle_t bt_buf{nullptr};
 static esp_spp_role_t spp_master_or_slave(esp_bd_addr_t const& own,
                                           esp_bd_addr_t const& remote) {
   for (auto i{0u}; i < sizeof(esp_bd_addr_t); ++i)
-    if (own[i] < remote[i])
-      return ESP_SPP_ROLE_SLAVE;
+    if (own[i] < remote[i]) return ESP_SPP_ROLE_SLAVE;
     else if (own[i] > remote[i])
       break;
 
@@ -49,7 +48,7 @@ static esp_spp_role_t spp_master_or_slave(esp_bd_addr_t const& own,
 static void write_to_bt_buf(esp_spp_cb_param_t* param) {
   // Send data to ring buffer
   while (!xRingbufferSend(
-      bt_buf, param->data_ind.data, param->data_ind.len, pdMS_TO_TICKS(10)))
+    bt_buf, param->data_ind.data, param->data_ind.len, pdMS_TO_TICKS(10)))
     ;
 
   // Send ring buffer handle to queue
@@ -134,8 +133,7 @@ static void bt_spp_master_cb(esp_spp_cb_event_t event,
       ESP_LOGI(bt_spp_master_tag, "ESP_SPP_SRV_OPEN_EVT");
       break;
 
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -150,7 +148,7 @@ static void bt_spp_slave_cb(esp_spp_cb_event_t event,
     case ESP_SPP_INIT_EVT:
       ESP_LOGI(bt_spp_slave_tag, "ESP_SPP_INIT_EVT");
       esp_spp_start_srv(
-          ESP_SPP_SEC_AUTHENTICATE, ESP_SPP_ROLE_SLAVE, 0, bt_spp_server_name);
+        ESP_SPP_SEC_AUTHENTICATE, ESP_SPP_ROLE_SLAVE, 0, bt_spp_server_name);
       break;
 
     // When SDP discovery complete, the event comes
@@ -205,8 +203,7 @@ static void bt_spp_slave_cb(esp_spp_cb_event_t event,
       uart_task_start_up();
       break;
 
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -229,7 +226,7 @@ void bt_spp_init() {
   ESP_LOGI(bt_spp_tag, "Own device spp role: %d", spp_role);
 
   esp_err_t ret{esp_spp_register_callback(
-      spp_role == ESP_SPP_ROLE_MASTER ? bt_spp_master_cb : bt_spp_slave_cb)};
+    spp_role == ESP_SPP_ROLE_MASTER ? bt_spp_master_cb : bt_spp_slave_cb)};
   if (ret != ESP_OK) {
     ESP_LOGE(bt_spp_tag,
              "%s spp register failed: %s\n",
@@ -241,7 +238,7 @@ void bt_spp_init() {
   ret = esp_spp_init(ESP_SPP_MODE_CB);
   if (ret != ESP_OK) {
     ESP_LOGE(
-        bt_spp_tag, "%s spp init failed: %s\n", __func__, esp_err_to_name(ret));
+      bt_spp_tag, "%s spp init failed: %s\n", __func__, esp_err_to_name(ret));
     return;
   }
 }

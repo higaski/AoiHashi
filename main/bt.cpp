@@ -31,14 +31,13 @@ static void bt_tx_task(void* pvHandle) {
 
     // Receive ring buffer handle from queue
     RingbufHandle_t uart_buf{nullptr};
-    if (!xQueueReceive(uart_queue, &uart_buf, portMAX_DELAY))
-      continue;
+    if (!xQueueReceive(uart_queue, &uart_buf, portMAX_DELAY)) continue;
 
     // Receive data from ring buffer
     uint8_t* data{nullptr};
     size_t len{};
-    while (!(
-        data = (uint8_t*)xRingbufferReceive(uart_buf, &len, pdMS_TO_TICKS(10))))
+    while (
+      !(data = (uint8_t*)xRingbufferReceive(uart_buf, &len, pdMS_TO_TICKS(10))))
       vTaskDelay(pdMS_TO_TICKS(10));
 
     // Write data to SPP

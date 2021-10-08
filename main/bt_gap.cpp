@@ -34,7 +34,7 @@ esp_bd_addr_t remote_bda{};
 /// \return Random value between min and max
 static uint32_t random_interval(uint32_t min, uint32_t max) {
   return min + (static_cast<float>(max - min) * esp_random()) /
-                   std::numeric_limits<uint32_t>::max();
+                 std::numeric_limits<uint32_t>::max();
 }
 
 /// Check if BT device address is valid
@@ -44,8 +44,7 @@ static uint32_t random_interval(uint32_t min, uint32_t max) {
 /// \return false BT device address invalid
 static bool is_valid_bda(esp_bd_addr_t const& bda) {
   for (auto i{0u}; i < ESP_BD_ADDR_LEN; ++i)
-    if (bda[i] != 0)
-      return true;
+    if (bda[i] != 0) return true;
   return false;
 }
 
@@ -56,12 +55,11 @@ static bool is_valid_bda(esp_bd_addr_t const& bda) {
 /// \param  size  Maximum size of string
 /// \return Pointer to buffer which contains string
 static char* bda2str(esp_bd_addr_t bda, char* str, size_t size) {
-  if (bda == NULL || str == NULL || size < 18)
-    return NULL;
+  if (bda == NULL || str == NULL || size < 18) return NULL;
 
   uint8_t* p{bda};
   sprintf(
-      str, "%02x:%02x:%02x:%02x:%02x:%02x", p[0], p[1], p[2], p[3], p[4], p[5]);
+    str, "%02x:%02x:%02x:%02x:%02x:%02x", p[0], p[1], p[2], p[3], p[4], p[5]);
 
   return str;
 }
@@ -73,19 +71,17 @@ static char* bda2str(esp_bd_addr_t bda, char* str, size_t size) {
 /// \param  bdname_len  Pointer to length of BT device name
 /// \return true        Success
 /// \return false       Failure
-static bool get_name_from_eir(uint8_t* eir,
-                              uint8_t* bdname,
-                              uint8_t* bdname_len) {
+static bool
+get_name_from_eir(uint8_t* eir, uint8_t* bdname, uint8_t* bdname_len) {
   uint8_t rmt_bdname_len{0};
 
-  if (!eir)
-    return false;
+  if (!eir) return false;
 
   uint8_t* rmt_bdname{esp_bt_gap_resolve_eir_data(
-      eir, ESP_BT_EIR_TYPE_CMPL_LOCAL_NAME, &rmt_bdname_len)};
+    eir, ESP_BT_EIR_TYPE_CMPL_LOCAL_NAME, &rmt_bdname_len)};
   if (!rmt_bdname)
     rmt_bdname = esp_bt_gap_resolve_eir_data(
-        eir, ESP_BT_EIR_TYPE_SHORT_LOCAL_NAME, &rmt_bdname_len);
+      eir, ESP_BT_EIR_TYPE_SHORT_LOCAL_NAME, &rmt_bdname_len);
 
   if (rmt_bdname) {
     if (rmt_bdname_len > ESP_BT_GAP_MAX_BDNAME_LEN)
@@ -95,8 +91,7 @@ static bool get_name_from_eir(uint8_t* eir,
       memcpy(bdname, rmt_bdname, rmt_bdname_len);
       bdname[rmt_bdname_len] = '\0';
     }
-    if (bdname_len)
-      *bdname_len = rmt_bdname_len;
+    if (bdname_len) *bdname_len = rmt_bdname_len;
 
     return true;
   }
@@ -117,9 +112,8 @@ static bool is_remote_esp_device(esp_bt_gap_cb_param_t* param) {
   char bda_str[18];
   esp_bt_gap_dev_prop_t* p;  // Bluetooth Device Property Descriptor
 
-  ESP_LOGI(bt_gap_tag,
-           "Device found: %s",
-           bda2str(param->disc_res.bda, bda_str, 18));
+  ESP_LOGI(
+    bt_gap_tag, "Device found: %s", bda2str(param->disc_res.bda, bda_str, 18));
 
   for (int i{0u}; i < param->disc_res.num_prop; i++) {
     p = param->disc_res.prop + i;
@@ -145,8 +139,8 @@ static bool is_remote_esp_device(esp_bt_gap_cb_param_t* param) {
       case ESP_BT_GAP_DEV_PROP_BDNAME: {
         ESP_LOGI(bt_gap_tag, "ESP_BT_GAP_DEV_PROP_BDNAME");
         bdname_len = (p->len > ESP_BT_GAP_MAX_BDNAME_LEN)
-                         ? ESP_BT_GAP_MAX_BDNAME_LEN
-                         : (uint8_t)p->len;
+                       ? ESP_BT_GAP_MAX_BDNAME_LEN
+                       : (uint8_t)p->len;
         memcpy(bdname, (uint8_t*)(p->val), bdname_len);
         bdname[bdname_len] = '\0';
         ESP_LOGI(bt_gap_tag, "Device name: %s", bdname);
@@ -196,9 +190,9 @@ static void bt_app_gap_cb(esp_bt_gap_cb_event_t event,
       if (param->disc_st_chg.state == ESP_BT_GAP_DISCOVERY_STOPPED &&
           !is_valid_bda(remote_bda))
         esp_bt_gap_start_discovery(
-            ESP_BT_INQ_MODE_GENERAL_INQUIRY,
-            random_interval(inquiry_duration_min, inquiry_duration_max),
-            0);
+          ESP_BT_INQ_MODE_GENERAL_INQUIRY,
+          random_interval(inquiry_duration_min, inquiry_duration_max),
+          0);
       break;
 
     // get remote services event
@@ -271,11 +265,9 @@ static void bt_app_gap_cb(esp_bt_gap_cb_event_t event,
       break;
 
     //
-    case ESP_BT_GAP_EVT_MAX:
-      break;
+    case ESP_BT_GAP_EVT_MAX: break;
 
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -312,7 +304,7 @@ void bt_gap_init() {
 
   // Start to discover nearby Bluetooth devices
   esp_bt_gap_start_discovery(
-      ESP_BT_INQ_MODE_GENERAL_INQUIRY,
-      random_interval(inquiry_duration_min, inquiry_duration_max),
-      0);
+    ESP_BT_INQ_MODE_GENERAL_INQUIRY,
+    random_interval(inquiry_duration_min, inquiry_duration_max),
+    0);
 }
