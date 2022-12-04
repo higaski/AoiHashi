@@ -6,12 +6,12 @@
 
 #include <driver/uart.h>
 #include <esp_log.h>
-#include <esp_spi_flash.h>
 #include <esp_system.h>
 #include <esp_task_wdt.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <soc/uart_struct.h>
+#include <spi_flash_mmap.h>
 #include <array>
 #include <cstdint>
 #include <memory>

@@ -9,6 +9,7 @@
 #include <esp_bt_main.h>
 #include <esp_gap_bt_api.h>
 #include <esp_log.h>
+#include <esp_random.h>
 #include <esp_spp_api.h>
 #include <esp_system.h>
 #include <freertos/FreeRTOS.h>
@@ -17,6 +18,7 @@
 #include <bt_spp.hpp>
 #include <cstdint>
 #include <cstring>
+#include <limits>
 #include "config.hpp"
 
 /// Own BT device address
