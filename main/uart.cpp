@@ -60,8 +60,6 @@ static void uart_rx_task([[maybe_unused]] void* pvParameter) {
   std::unique_ptr<uint8_t[]> rx{new (std::nothrow) uint8_t[uart_chunk_size]};
 
   for (;;) {
-    esp_task_wdt_reset();
-
     // Read data from UART
     auto len{
       uart_read_bytes(uart_num, &rx[0], uart_chunk_size, pdMS_TO_TICKS(10))};
@@ -90,8 +88,6 @@ static void uart_rx_task([[maybe_unused]] void* pvParameter) {
 /// \param  pvParameter Parameters passed to task
 static void uart_tx_task([[maybe_unused]] void* pvParameter) {
   for (;;) {
-    esp_task_wdt_reset();
-
     // Receive ring buffer handle from queue
     RingbufHandle_t uart_buf{nullptr};
     if (!xQueueReceive(bt_queue, &uart_buf, portMAX_DELAY)) continue;

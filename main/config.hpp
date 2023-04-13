@@ -56,13 +56,13 @@ constexpr UBaseType_t task_priority_uart_rx{6};
 constexpr UBaseType_t task_priority_uart_tx{5};
 
 /// UART peripheral number
-constexpr auto uart_num{UART_NUM_0};
+constexpr auto uart_num{UART_NUM_1};
 
 /// UART transmit pin number
-constexpr auto uart_tx_pin{GPIO_NUM_1};
+constexpr auto uart_tx_pin{GPIO_NUM_17};
 
 /// UART receive pin number
-constexpr auto uart_rx_pin{GPIO_NUM_3};
+constexpr auto uart_rx_pin{GPIO_NUM_16};
 
 /// UART request-to-send pin number
 constexpr auto uart_rts_pin{UART_PIN_NO_CHANGE};

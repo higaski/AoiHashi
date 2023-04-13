@@ -27,8 +27,6 @@ static void bt_tx_task(void* pvHandle) {
   uint32_t const handle{(uint32_t const)pvHandle};
 
   for (;;) {
-    esp_task_wdt_reset();
-
     // Receive ring buffer handle from queue
     RingbufHandle_t uart_buf{nullptr};
     if (!xQueueReceive(uart_queue, &uart_buf, portMAX_DELAY)) continue;
