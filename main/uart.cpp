@@ -66,11 +66,13 @@ static void uart_rx_task([[maybe_unused]] void* pvParameter) {
     if (len <= 0) continue;
 
     // Baud rate detection
-    auto const baud_rate{baud_rate_detection(
-      UART[uart_num]->lowpulse.min_cnt, UART[uart_num]->highpulse.min_cnt)};
-    if (baud_rate != uart_config.baud_rate) {
-      uart_config.baud_rate = baud_rate;
-      uart_param_config(uart_num, &uart_config);
+    if constexpr (uart_auto_baud_rate) {
+      auto const baud_rate{baud_rate_detection(
+        UART[uart_num]->lowpulse.min_cnt, UART[uart_num]->highpulse.min_cnt)};
+      if (baud_rate != uart_config.baud_rate) {
+        uart_config.baud_rate = baud_rate;
+        uart_param_config(uart_num, &uart_config);
+      }
     }
 
     // Send data to ring buffer
