@@ -2,6 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "CMake AoiHashi",
+      "type": "shell",
+      "isBackground": true,
+      "command": ". esp-idf.fish && cmake -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=$IDF_PATH/tools/cmake/toolchain-esp32.cmake -DPYTHON_DEPS_CHECKED=1 -DESP_PLATFORM=1 -DIDF_TARGET=esp32 -DCCACHE_ENABLE=0"
+    },
+    {
+      "label": "Ninja AoiHashi",
+      "type": "shell",
+      "isBackground": true,
+      "command": ". esp-idf.fish && ninja -C build"
+    },
+    {
       "label": "Run openocd",
       "type": "shell",
       "isBackground": true,
